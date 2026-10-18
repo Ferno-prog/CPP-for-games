@@ -3,12 +3,13 @@
 #include <string>
 #include <cmath>
 #include <limits>
+#include <cctype>
 
 //https://mathcenter.oxford.emory.edu/site/cs171/shuntingYardAlgorithm/
 
 bool isNumber(const std::string& token)
 {
-	return std::isdigit(token[0]) || (token.size() > 1 && (token[0] == '-' || token[0] == '+') && std::isdigit(token[1]));
+	return std::isdigit(static_cast<unsigned char>(token[0])) || (token.size() > 1 && (token[0] == '-' || token[0] == '+') && std::isdigit(static_cast<unsigned char>(token[1])));
 }
 
 bool isOperator(const std::string& token)
@@ -44,7 +45,7 @@ std::vector<std::string> getInput()
 	std::string input;
 	std::vector<std::string> tokens;
 
-	std::cout << "Please enter a sum (every number, operator and bracket has to be space seperated and the sum has to end with =): ";
+	std::cout << "Please enter a sum (every number, operator and bracket has to be space separated and the sum has to end with =): ";
 
 	while (std::cin >> input)
 	{
@@ -80,17 +81,13 @@ std::vector<std::string> toRPN(std::vector<std::string>& tokens)
 				output.push_back(operatorStack.back());
 				operatorStack.pop_back();
 			}
+
+			if (operatorStack.empty())
+			{
+				std::cout << "ERROR: No matching parenthesis found." << std::endl;
+				return std::vector<std::string>();
+			}
 			operatorStack.pop_back();
-		}
-		else if (isOperator(token) && (operatorStack.empty() || operatorStack.back() == "("))
-		{
-			operatorStack.push_back(token);
-		}
-		else if (isOperator(token) && !operatorStack.empty() &&
-			(getPrecedence(token) > getPrecedence(operatorStack.back()) ||
-			(getPrecedence(token) == getPrecedence(operatorStack.back()) && isRightAssociative(token))))
-		{
-			operatorStack.push_back(token);
 		}
 		else if (isOperator(token))
 		{
@@ -102,6 +99,11 @@ std::vector<std::string> toRPN(std::vector<std::string>& tokens)
 				operatorStack.pop_back();
 			}
 			operatorStack.push_back(token);
+		}
+		else
+		{
+			std::cout << "ERROR: No match was found for this token." << std::endl;
+			return std::vector<std::string>();
 		}
 
 	}
@@ -125,47 +127,53 @@ float solveRPN(const std::vector<std::string>& RPN)
 		}
 		else if (isOperator(RPN[i]))
 		{
-			float leftOperant;
-			float rightOperant;
+			float leftOperand;
+			float rightOperand;
 
-			rightOperant = stack.back();
+			if (stack.size() < 2)
+			{
+				std::cout << "ERROR: Missing operand." << std::endl;
+				return std::numeric_limits<float>::quiet_NaN();
+			}
+
+			rightOperand = stack.back();
 			stack.pop_back();
-			leftOperant = stack.back();
+			leftOperand = stack.back();
 			stack.pop_back();
 
 			if (RPN[i] == "+")
 			{
-				stack.push_back(leftOperant + rightOperant);
+				stack.push_back(leftOperand + rightOperand);
 			}
 			else if (RPN[i] == "-")
 			{
-				stack.push_back(leftOperant - rightOperant);
+				stack.push_back(leftOperand - rightOperand);
 			}
 			else if (RPN[i] == "*")
 			{
-				stack.push_back(leftOperant * rightOperant);
+				stack.push_back(leftOperand * rightOperand);
 			}
 			else if (RPN[i] == "/")
 			{
-				if (rightOperant == 0.0f)
+				if (rightOperand == 0.0f)
 				{
-					std::cout << "ERROR: Cant divide by 0." << std::endl;;
+					std::cout << "ERROR: Can't divide by 0." << std::endl;;
 					return std::numeric_limits<float>::quiet_NaN();
 				}
-				stack.push_back(leftOperant / rightOperant);
+				stack.push_back(leftOperand / rightOperand);
 			}
 			else if (RPN[i] == "^")
 			{
-				stack.push_back(std::pow(leftOperant, rightOperant));
+				stack.push_back(std::pow(leftOperand, rightOperand));
 			}
 			else if (RPN[i] == "%")
 			{
-				if (rightOperant == 0.0f)
+				if (rightOperand == 0.0f)
 				{
-					std::cout << "ERROR: Cant modulo by 0." << std::endl;
+					std::cout << "ERROR: Can't modulo by 0." << std::endl;
 					return std::numeric_limits<float>::quiet_NaN();
 				}
-				stack.push_back(std::fmod(leftOperant, rightOperant));
+				stack.push_back(std::fmod(leftOperand, rightOperand));
 			}
 			else
 			{
@@ -180,6 +188,11 @@ float solveRPN(const std::vector<std::string>& RPN)
 		}
 
 	}
+	if (stack.size() != 1)
+	{
+		std::cout << "ERROR: Invalid expression." << std::endl;
+		return std::numeric_limits<float>::quiet_NaN();
+	}
 	return stack.back();
 }
 
@@ -193,7 +206,7 @@ void printVector(const std::vector<std::string>& tokens)
 
 int main()
 {
-	while (true)
+	while (std::cin)
 	{
 		std::vector<std::string> tokens = getInput();
 		float result = solveRPN(toRPN(tokens));
