@@ -51,7 +51,7 @@ bool isBitSet(const uint8_t value, const int n)
 
 uint8_t setBit(const uint8_t value, const int n) { return value | (1 << n); }
 uint8_t clearBit(const uint8_t value, const int n) { return value & ~(1 << n); }
-uint8_t invertBit(const uint8_t value, const int n) { return value & ~(1 << n); }
+uint8_t invertBit(const uint8_t value, const int n) { return value ^ (1 << n); }
 
 void printBinaryAndDecimal(const std::string &text,const uint8_t value)
 {
