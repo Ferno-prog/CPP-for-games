@@ -1,8 +1,7 @@
 #include <iostream>
 #include <limits>
-#include <cstdint>
 
-std::uint64_t factorial(std::uint32_t n)
+unsigned long long factorial(unsigned long n)
 {
 	if (n < 2)
 	{
@@ -18,29 +17,28 @@ void clearInput()
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-std::uint32_t getNumber()
+unsigned long getNumber()
 {
-	int n = 0;
-	constexpr int MAX_INPUT = 20;
+	long n;
 
-	std::cout << "Enter a natural number (0 - " << MAX_INPUT << "): ";
+	std::cout << "Enter a natural number (1 - 20): ";
 	std::cin >> n;
 
-	while (std::cin.fail() || std::cin.peek() != '\n' || n < 0 || n > MAX_INPUT)
+	while (std::cin.fail() || n < 1 || n > 20)
 	{
 		clearInput();
 
 		std::cerr << "ERROR: Invalid input." << std::endl;
-		std::cout << "Enter a natural number (0 - " << MAX_INPUT << "): ";
+		std::cout << "Enter a natural number (1 - 20): ";
 		std::cin >> n;
 	}
 
-	return static_cast<std::uint32_t>(n);
+	return static_cast<unsigned long>(n);
 }
 
 int main()
 {
-	std::uint32_t n = getNumber();
+	unsigned long n = getNumber();
 	std::cout << n << "! = " << factorial(n) << std::endl;
 	return 0;
 }

@@ -80,7 +80,7 @@ void outputRectangleData()
 	while (std::cin.fail() || w <= 0)
 	{
 		clearInput();
-
+		
 		std::cerr << "ERROR: Invalid input." << std::endl;
 		std::cout << "Please enter the width: ";
 		std::cin >> w;

@@ -10,14 +10,14 @@ void clearInput()
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-int getIntInRange(const int min, const int max,const std::string &what)
+int getIntInRange(const int min, const int max, const std::string& what)
 {
 	int input;
 
 	std::cout << "Please enter " << what << " in the range (" << min << " - " << max << "): ";
 	std::cin >> input;
 
-	while (std::cin.fail() || input < min || input > max)
+	while (std::cin.fail() || std::cin.peek() != '\n' || input < min || input > max)
 	{
 		clearInput();
 
@@ -46,19 +46,19 @@ int countSetBits(const uint8_t value)
 
 bool isBitSet(const uint8_t value, const int n)
 {
-	return (value & (1 << n));
+	return (value & (1 << n)) != 0;
 }
 
-uint8_t setBit(const uint8_t value, const int n) { return value | (1 << n); }
-uint8_t clearBit(const uint8_t value, const int n) { return value & ~(1 << n); }
-uint8_t invertBit(const uint8_t value, const int n) { return value ^ (1 << n); }
+uint8_t setBit(const uint8_t value, const int n) { return static_cast<std::uint8_t>(value | (1 << n)); }
+uint8_t clearBit(const uint8_t value, const int n) { return static_cast<std::uint8_t>(value & ~(1 << n)); }
+uint8_t invertBit(const uint8_t value, const int n) { return static_cast<std::uint8_t>(value ^ (1 << n)); }
 
-void printBinaryAndDecimal(const std::string &text,const uint8_t value)
+void printBinaryAndDecimal(const std::string& text, const uint8_t value)
 {
 	std::cout << text << ": Binary: " << std::bitset<8>(value) << " Decimal: " << static_cast<int>(value) << '\n';
 }
 
-bool askTonContinue()
+bool askToContinue()
 {
 	char answer;
 
@@ -94,7 +94,7 @@ int main()
 		printBinaryAndDecimal("The value shifted left", static_cast<uint8_t>(number << n));
 		printBinaryAndDecimal("The value shifted right", static_cast<uint8_t>(number >> n));
 
-	} while (askTonContinue());
+	} while (askToContinue());
 
 	return 0;
 }
