@@ -80,7 +80,7 @@ void outputRectangleData()
 	while (std::cin.fail() || w <= 0)
 	{
 		clearInput();
-		
+
 		std::cerr << "ERROR: Invalid input." << std::endl;
 		std::cout << "Please enter the width: ";
 		std::cin >> w;
@@ -139,15 +139,23 @@ void outputShapeData(const char shape)
 {
 	switch (shape)
 	{
+	case '1':
+	case 'c':
 	case 'C':
 		outputCircleData();
 		break;
+	case '2':
+	case 's':
 	case 'S':
 		outputSquareData();
 		break;
+	case '3':
+	case 'r':
 	case 'R':
 		outputRectangleData();
 		break;
+	case '4':
+	case 't':
 	case 'T':
 		outputTriangleData();
 		break;

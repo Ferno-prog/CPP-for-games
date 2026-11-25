@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{994cdefc-8a4e-4304-9f23-cbc27332dda1}</ProjectGuid>
+    <ProjectGuid>{d8bbf36a-e794-4651-9473-9fc0767237df}</ProjectGuid>
     <RootNamespace>AreaCalculator</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
